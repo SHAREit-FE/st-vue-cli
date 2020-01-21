@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+
+program.version(require('../package').version)
+.usage("<command>")
+.command('init', 'Generate a new vue management project')
+.option('--offline', 'use cached template')
+.parse(process.argv);

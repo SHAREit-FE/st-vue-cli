@@ -1,0 +1,99 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const path = require('path');
+const exists = require('fs').existsSync;
+const inquirer = require('inquirer');
+const download = require('download-git-repo')
+const home = require('user-home')
+const logger = require('../lib/logger')
+const tildify = require('tildify')
+const chalk = require('chalk')
+const rm = require('rimraf').sync
+const generate = require('../lib/generate')
+const ora = require('ora')
+// github模板地址
+let templatePath = 'SHAREit-FE/st-vue-admin-template';
+// 模板本地路径
+let tmpLocalPath = path.join(home, '.st-vue-templates/st-vue-admin-template')
+program
+  .usage("<command>")
+  .option('--offline', 'use cached template')
+  .parse(process.argv)
+
+// 项目基本配置
+const questions = [
+  {
+  type: 'input',
+  name: 'projectName',
+  message: 'projectName：',
+  default: '',
+  validate(val) {
+    if (!val) { // 验证一下输入是否正确
+      return 'Please enter the file name';
+    }
+    if (exists(val)) { // 判断文件是否存在
+      return 'The file already exists';
+    } else {
+      return true;
+    };
+  }
+},
+// 是否接入zeus
+{
+  type: 'confirm',
+  name: 'zeus',
+  message: 'Is it connected to Zeus?'
+},
+];
+inquirer.prompt(questions).then(answers => {
+  if (answers) {
+    // 项目生成路径
+    const projectPath = path.resolve(answers.projectName)
+    answers.projectPath = projectPath;
+    // 模板分支
+    let branch = '';
+    if(answers.zeus) {
+      branch = '#zeus';
+    }
+    templatePath = templatePath + branch;
+    tmpLocalPath = tmpLocalPath + branch;
+    start(answers)
+  }
+}).catch()
+/**
+ * 开始生成项目
+ * @param answers 
+ */
+function start(answers) {
+  if (program.offline && exists(tmpLocalPath)) {
+    console.log(`> Use cached template at ${chalk.yellow(tildify(tmpLocalPath))}`)
+    generate(answers.projectName,tmpLocalPath, answers.projectPath,err => {
+      if (err) logger.fatal(err)
+      logger.success('Generated success "%s".', answers.projectName)
+    })
+  }else {
+    downloadAndGenerate(answers);
+  }
+}
+
+/**
+ * Download a generate from a template repo.
+ *
+ * @param {String} template
+ */
+
+function downloadAndGenerate (answers) {
+  const spinner = ora('downloading template')
+  spinner.start()
+  // Remove if local template exists
+  if (exists(tmpLocalPath)) rm(tmpLocalPath)
+  download(templatePath, tmpLocalPath, { clone: false }, err => {
+    spinner.stop()
+    if (err) logger.fatal('Failed to download repo ' + templatePath + ': ' + err.message.trim())
+    generate(answers.projectName,tmpLocalPath, answers.projectPath,err => {
+      if (err) logger.fatal(err)
+      logger.success('Generated success "%s".', answers.projectName)
+    })
+  })
+}
