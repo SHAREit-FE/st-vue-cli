@@ -18,7 +18,7 @@ $ st-vue/sv init
 
 ### Other
 
-* [easyify template](https://github.com/SHAREit-FE/st-vue-admin-template)
+* [SHAREit vue template](https://github.com/SHAREit-FE/st-vue-admin-template)
 
 ### License
 
