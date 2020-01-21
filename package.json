@@ -1,5 +1,5 @@
 {
-  "name": "st-vue-admin",
+  "name": "st-vue-cli",
   "version": "1.0.0",
   "description": "",
   "bin": {
@@ -7,6 +7,10 @@
     "st-vue-init": "./bin/st-vue-init",
     "sv": "./bin/sv",
     "sv-init": "./bin/sv-init"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SHAREit-FE/st-vue-cli.git"
   },
   "scripts": {},
   "author": "",
