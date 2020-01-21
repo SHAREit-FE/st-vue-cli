@@ -13,7 +13,7 @@
     "url": "git+https://github.com/SHAREit-FE/st-vue-cli.git"
   },
   "scripts": {},
-  "author": "",
+  "author": "chenyahui chenyahui0405@163.com",
   "license": "ISC",
   "dependencies": {
     "async": "^2.4.0",
