@@ -16,7 +16,7 @@
   "author": "chenyahui chenyahui0405@163.com",
   "license": "ISC",
   "dependencies": {
-    "async": "^2.4.0",
+    "async": "^3.0.0",
     "chalk": "^3.0.0",
     "commander": "^4.0.1",
     "consolidate": "^0.15.1",
